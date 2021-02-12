@@ -77,9 +77,11 @@ public class MovieService {
      */
     private boolean checkFranchiseAndCharactersExistence(Movie movie){
 
+        if(movie.getFranchise() != null)
         if (!franchiseRepository.existsById(Objects.requireNonNull(movie.getFranchise().getId())))
             return false;
 
+        if(movie.getCharacters() != null)
         for (int i = 0; i < movie.getCharacters().size(); i++) {
             if (!characterRepository.existsById(Objects.requireNonNull(movie.getCharacters().get(i).getId())))
                 return false;
