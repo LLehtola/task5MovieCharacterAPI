@@ -1,7 +1,8 @@
 package com.experis.movie_character_api.controllers;
 
 import com.experis.movie_character_api.models.Movie;
-import com.experis.movie_character_api.repositories.MovieRepository;
+import com.experis.movie_character_api.services.MovieService;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -11,22 +12,18 @@ import java.util.Optional;
 
 /**
  * this class controls the /movies endpoint
- *
  */
 @RestController
 @CrossOrigin(origins = "*")
 @RequestMapping("/api/v1/movies")
 public class MovieController {
 
-    private final MovieRepository movieRepository;
-
-    public MovieController(MovieRepository movieRepository) {
-        this.movieRepository = movieRepository;
-    }
-
+    @Autowired
+    private MovieService movieService;
+    
     @GetMapping
     public ResponseEntity<List<Movie>> getAllMovies() {
-        List<Movie> movies = movieRepository.findAll();
+        List<Movie> movies = movieService.getAllMovies();
 
         HttpStatus status;
         status = (movies.isEmpty())? HttpStatus.NO_CONTENT : HttpStatus.OK;
@@ -36,7 +33,7 @@ public class MovieController {
 
     @GetMapping("/{movieId}")
     public ResponseEntity<Optional<Movie>> getMovieById(@PathVariable Long movieId) {
-        Optional<Movie> movie = movieRepository.findById(movieId);
+        Optional<Movie> movie = movieService.getMovieById(movieId);
 
         HttpStatus status;
         status = (movie.isEmpty())? HttpStatus.NO_CONTENT : HttpStatus.OK;
@@ -44,13 +41,32 @@ public class MovieController {
     }
 
     @PostMapping
-    public ResponseEntity<Movie> addMovie(@RequestBody Movie movie) {
+    public ResponseEntity<Boolean> addMovie(@RequestBody Movie movie) {
+        boolean isCreated = movieService.addNewMovie(movie);
+        
+        HttpStatus status;
+        status = (!isCreated)? HttpStatus.BAD_REQUEST : HttpStatus.CREATED;
 
-        Movie returnMovie = movieRepository.save(movie);
+        return new ResponseEntity<>(isCreated, status);
+    }
+
+    @PutMapping("/{movieId}")
+    public ResponseEntity<Boolean> updateMovie(@PathVariable Long movieId, @RequestBody Movie movie){
+        boolean isUpdated = movieService.updateMovie(movie, movieId);
+        HttpStatus status;
+
+        status = (isUpdated)? HttpStatus.OK : HttpStatus.BAD_REQUEST;
+
+        return new ResponseEntity<>(isUpdated, status);
+    }
+
+    @DeleteMapping("/{movieId}")
+    public ResponseEntity<Boolean> deleteMovie(@PathVariable Long movieId){
+        boolean isDeleted = movieService.deleteMovie(movieId);
 
         HttpStatus status;
-        status = (returnMovie == null)? HttpStatus.NOT_ACCEPTABLE : HttpStatus.CREATED; //TODO check what status should be returned if movie failed to be created
+        status = (isDeleted)? HttpStatus.OK : HttpStatus.NOT_FOUND;
 
-        return new ResponseEntity<>(returnMovie, status);
+        return new ResponseEntity<>(isDeleted, status);
     }
 }

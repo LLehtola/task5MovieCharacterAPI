@@ -1,12 +1,14 @@
 package com.experis.movie_character_api.models;
 
 import com.fasterxml.jackson.annotation.JsonGetter;
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 import org.springframework.data.jpa.domain.AbstractPersistable;
 
 import javax.persistence.*;
+import java.util.Date;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -18,10 +20,12 @@ import java.util.stream.Collectors;
 @AllArgsConstructor
 @Data // encapsulate getters and setters
 @Entity
+@JsonIgnoreProperties({ "new" })
 public class Movie extends AbstractPersistable<Long> {
 
     private String title;
     private String genre;
+    private Date releaseYear;
     private String director;
     private String picture_url;
     private String trailer_url;
