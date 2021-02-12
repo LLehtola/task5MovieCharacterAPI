@@ -1,7 +1,7 @@
 package com.experis.movie_character_api.controllers;
 
 import com.experis.movie_character_api.models.Character;
-import com.experis.movie_character_api.repositories.CharacterRepository;
+import com.experis.movie_character_api.services.CharacterService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -15,11 +15,11 @@ import java.util.List;
 public class CharacterController {
 
     @Autowired
-    private CharacterRepository characterRepository;
+    private CharacterService characterService;
 
     @GetMapping
     public ResponseEntity<List<Character>> getAllCharacters() {
-        List<Character> characters = characterRepository.findByIdNotNull();
+        List<Character> characters = characterService.getAllCharacters();
         HttpStatus status = HttpStatus.OK;
         return new ResponseEntity<>(characters, status);
     }
@@ -27,22 +27,21 @@ public class CharacterController {
     @GetMapping("/{id}")
     public ResponseEntity<Character> getCharacterById(@PathVariable Long id) {
         HttpStatus status;
+        Character returnedCharacter = characterService.getCharacterById(id);
 
-        if (!characterRepository.existsById(id)) {
+        if (returnedCharacter == null) {
             status = HttpStatus.NOT_FOUND;
             return new ResponseEntity<>(null, status);
         }
 
         status = HttpStatus.OK;
-        Character returnedCharacter = characterRepository.findById(id).get();
-
         return new ResponseEntity<>(returnedCharacter, status);
     }
 
     @PostMapping()
     public ResponseEntity<Character> addCharacter(@RequestBody Character character) {
         HttpStatus status;
-        character = characterRepository.save(character);
+        character = characterService.addCharacter(character);
         status = HttpStatus.CREATED;
         return new ResponseEntity<>(character, status);
     }
@@ -57,12 +56,13 @@ public class CharacterController {
             return new ResponseEntity<>(null, status);
         }
 
-        if (!characterRepository.existsById(id)) {
+        Character returnedCharacter = characterService.updateCharacter(id, character);
+
+        if (returnedCharacter == null) {
             status = HttpStatus.NOT_FOUND;
             return new ResponseEntity<>(null, status);
         }
 
-        Character returnedCharacter = characterRepository.save(character);
         status = HttpStatus.NO_CONTENT;
         return new ResponseEntity<>(returnedCharacter, status);
     }
@@ -70,15 +70,14 @@ public class CharacterController {
     @DeleteMapping("/{id}")
     public ResponseEntity<String> deleteCharacter(@PathVariable Long id) {
         HttpStatus status;
+        boolean isDeleted = characterService.deleteCharacter(id);
 
-        if (!characterRepository.existsById(id)) {
+        if (!isDeleted) {
             status = HttpStatus.NOT_FOUND;
             return new ResponseEntity<>("requested resource was not found",
                     status);
         }
 
-        Character character = characterRepository.findById(id).get();
-        characterRepository.delete(character);
         status = HttpStatus.OK;
         return new ResponseEntity<>("resource with id " + id + " was deleted",
                 status);
