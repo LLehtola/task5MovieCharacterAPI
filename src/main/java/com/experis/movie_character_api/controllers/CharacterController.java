@@ -68,18 +68,17 @@ public class CharacterController {
     }
 
     @DeleteMapping("/{id}")
-    public ResponseEntity<String> deleteCharacter(@PathVariable Long id) {
+    public ResponseEntity<Boolean> deleteCharacter(@PathVariable Long id) {
         HttpStatus status;
         boolean isDeleted = characterService.deleteCharacter(id);
 
-        if (!isDeleted) {
+        if (isDeleted) {
+            status = HttpStatus.OK;
+        } else {
             status = HttpStatus.NOT_FOUND;
-            return new ResponseEntity<>("requested resource was not found",
-                    status);
         }
-
-        status = HttpStatus.OK;
-        return new ResponseEntity<>("resource with id " + id + " was deleted",
+        
+        return new ResponseEntity<>(isDeleted,
                 status);
     }
 }
