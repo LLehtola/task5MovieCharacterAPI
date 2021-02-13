@@ -11,6 +11,6 @@ import java.util.List;
 @Repository
 public interface FranchiseRepository extends JpaRepository<Franchise, Long>{
 
-    @EntityGraph(attributePaths = {"franchises"})
+    @EntityGraph(attributePaths = {"movies"})
     List<Franchise> findByIdNotNull();
 }
