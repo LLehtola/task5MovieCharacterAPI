@@ -1,5 +1,6 @@
 package com.experis.movie_character_api.services;
 
+import com.experis.movie_character_api.models.Character;
 import com.experis.movie_character_api.models.Movie;
 import com.experis.movie_character_api.repositories.CharacterRepository;
 import com.experis.movie_character_api.repositories.FranchiseRepository;
@@ -26,19 +27,19 @@ public class MovieService {
     @Autowired
     CharacterRepository characterRepository;
 
-    public List<Movie> getAllMovies(){
-        return movieRepository.findAll();
+    public List<Movie> getAllMovies() {
+        return movieRepository.findByIdNotNull();
     }
 
-    public Optional<Movie> getMovieById(Long movieId){
+    public Optional<Movie> getMovieById(Long movieId) {
 
         if (!movieRepository.existsById(movieId))
-        return Optional.empty();
+            return Optional.empty();
 
         return movieRepository.findById(movieId);
     }
 
-    public boolean addNewMovie(Movie movie){
+    public boolean addNewMovie(Movie movie) {
 
         if (!checkFranchiseAndCharactersExistence(movie))
             return false;
@@ -47,10 +48,10 @@ public class MovieService {
         return true;
     }
 
-    public boolean updateMovie(Movie movie, Long id){
+    public boolean updateMovie(Movie movie, Long id) {
 
-        if(id.equals(movie.getId())) {
-            if (checkFranchiseAndCharactersExistence(movie)){
+        if (id.equals(movie.getId()) && movieRepository.existsById(id)) {
+            if (checkFranchiseAndCharactersExistence(movie)) {
                 movieRepository.save(movie);
                 return true;
             }
@@ -59,9 +60,9 @@ public class MovieService {
     }
 
     @Transactional
-    public boolean deleteMovie(Long id){
+    public boolean deleteMovie(Long id) {
 
-        if(!movieRepository.existsById(id))
+        if (!movieRepository.existsById(id))
             return false;
 
         Movie movie = movieRepository.findById(id).get();
@@ -72,20 +73,29 @@ public class MovieService {
     /**
      * checks if movie's franchise and characters ids do exist in the database
      * before adding/ updating the movie entity.
+     *
      * @param movie the object to be tested
      * @return true if the object is valid and false otherwise
      */
-    private boolean checkFranchiseAndCharactersExistence(Movie movie){
+    private boolean checkFranchiseAndCharactersExistence(Movie movie) {
 
-        if(movie.getFranchise() != null)
-        if (!franchiseRepository.existsById(Objects.requireNonNull(movie.getFranchise().getId())))
-            return false;
-
-        if(movie.getCharacters() != null)
-        for (int i = 0; i < movie.getCharacters().size(); i++) {
-            if (!characterRepository.existsById(Objects.requireNonNull(movie.getCharacters().get(i).getId())))
+        if (movie.getFranchise() != null)
+            if (!franchiseRepository.existsById(Objects.requireNonNull(movie.getFranchise().getId())))
                 return false;
-        }
+
+        if (movie.getCharacters() != null)
+            for (int i = 0; i < movie.getCharacters().size(); i++) {
+                if (!characterRepository.existsById(Objects.requireNonNull(movie.getCharacters().get(i).getId())))
+                    return false;
+            }
         return true;
+    }
+
+    public List<Character> getAllCharactersInMovieById(Long movieId) {
+
+        if (movieRepository.existsById(movieId)){
+            return movieRepository.findById(movieId).get().getCharacters();
+        }
+        return null;
     }
 }

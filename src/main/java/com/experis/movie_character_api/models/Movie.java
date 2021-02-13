@@ -8,7 +8,6 @@ import lombok.NoArgsConstructor;
 import org.springframework.data.jpa.domain.AbstractPersistable;
 
 import javax.persistence.*;
-import java.util.Date;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -20,20 +19,14 @@ import java.util.stream.Collectors;
 @AllArgsConstructor
 @Data // encapsulate getters and setters
 @Entity
-@JsonIgnoreProperties({ "new" })
+@JsonIgnoreProperties({"new"})
 public class Movie extends AbstractPersistable<Long> {
-
-    private String title;
-    private String genre;
-    private Date releaseYear;
-    private String director;
-    private String picture_url;
-    private String trailer_url;
 
     //franchise Entity
     @ManyToOne
     @JoinColumn(name = "franchise_id")
-    public Franchise franchise;
+    private Franchise franchise;
+
     //character Entity
     @ManyToMany
     @JoinTable(
@@ -41,7 +34,14 @@ public class Movie extends AbstractPersistable<Long> {
             joinColumns = {@JoinColumn(name = "movie_id")},
             inverseJoinColumns = {@JoinColumn(name = "character_id")}
     )
-    public List<Character> characters;
+    private List<Character> characters;
+
+    private String title;
+    private String genre;
+    private int releaseYear;
+    private String director;
+    private String picture_url;
+    private String trailer_url;
 
     @JsonGetter("franchise")
     public String franchise() {
