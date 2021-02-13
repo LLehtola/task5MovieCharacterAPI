@@ -6,7 +6,7 @@ Movie_character is an API that is made with Hibernate to control a PostgresSQL d
 2. [LLehtola](https://github.com/LLehtola)
 3. [maijahaka](https://github.com/maijahaka)
 ## API
-###Allowed HTTPs requests:
+### Allowed HTTPs requests:
 - POST    &emsp;&nbsp; : To create resource
 - PUT     &emsp;&emsp; : Update resource
 - GET     &emsp;&emsp; : Get a resource or list of resources
