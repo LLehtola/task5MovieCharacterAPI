@@ -11,5 +11,8 @@ import java.util.List;
 public interface MovieRepository extends JpaRepository<Movie, Long> {
 
     @EntityGraph(attributePaths = {"characters"})
+    List<Movie> findByIdNotNull();
+
+    @EntityGraph(attributePaths = {"characters"})
     List<Movie> findAllByFranchiseId(Long franchiseId);
 }
