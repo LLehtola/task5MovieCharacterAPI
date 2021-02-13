@@ -1,6 +1,7 @@
 package com.experis.movie_character_api.controllers;
 
 import com.experis.movie_character_api.models.Character;
+import com.experis.movie_character_api.models.Movie;
 import com.experis.movie_character_api.services.FranchiseService;
 import com.experis.movie_character_api.models.Franchise;
 import com.experis.movie_character_api.repositories.FranchiseRepository;
@@ -82,6 +83,20 @@ public class FranchiseController {
 
         return new ResponseEntity<>(isDeleted,
                 status);
+    }
+
+    @GetMapping("/{id}/movies")
+    public ResponseEntity<List<Movie>> getAllMoviesInFranchise(@PathVariable Long id) {
+        HttpStatus status;
+        List<Movie> moviesInFranchise = franchiseService.getAllMoviesInFranchise(id);
+
+        if (moviesInFranchise == null) {
+            status = HttpStatus.NOT_FOUND;
+            return new ResponseEntity<>(null, status);
+        }
+
+        status = HttpStatus.OK;
+        return new ResponseEntity<>(moviesInFranchise, status);
     }
 }
 

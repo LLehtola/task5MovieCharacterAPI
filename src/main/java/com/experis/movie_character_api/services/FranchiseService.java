@@ -67,5 +67,11 @@ public class FranchiseService {
             return true;
         }
 
+        public List<Movie> getAllMoviesInFranchise(Long id) {
+            if (!franchiseRepository.existsById(id)) {
+                return null;
+            }
 
+            return movieRepository.findAllByFranchiseId(id);
+        }
 }
