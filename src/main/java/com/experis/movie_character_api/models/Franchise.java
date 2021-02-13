@@ -24,7 +24,7 @@ public class Franchise extends AbstractPersistable<Long>{
     private String description;
 
     @JsonProperty("movies")
-    @OneToMany(fetch = FetchType.LAZY, mappedBy = "franchises")
+    @OneToMany(fetch = FetchType.LAZY, mappedBy = "franchise")
     private List<Movie> movies = new ArrayList<>();
 
     @JsonGetter("movies")
