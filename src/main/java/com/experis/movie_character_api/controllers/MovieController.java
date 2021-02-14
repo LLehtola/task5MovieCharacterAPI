@@ -46,7 +46,7 @@ public class MovieController {
         List<Character> characters = movieService.getAllCharactersInMovieById(movieId);
 
         HttpStatus status;
-        status = (characters.isEmpty()) ? HttpStatus.NO_CONTENT : HttpStatus.OK;
+        status = (characters == null) ? HttpStatus.NO_CONTENT : HttpStatus.OK;
         return new ResponseEntity<>(characters, status);
     }
 
