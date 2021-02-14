@@ -11,6 +11,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import javax.transaction.Transactional;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
@@ -74,4 +75,26 @@ public class FranchiseService {
 
             return movieRepository.findAllByFranchiseId(id);
         }
+
+    public List<Character> getCharactersByFranchiseId(Long id) {
+
+        if (!franchiseRepository.existsById(id))
+            return null;
+
+        Franchise franchise = franchiseRepository.findById(id).get();
+        List<Movie> movies = franchise.getMovies();
+        List<Character> characters = new ArrayList<>();
+
+        for (Movie movie : movies) {
+            List<Character> CharactersInMovie = movie.getCharacters();
+
+            for (Character role : CharactersInMovie)
+                if (!characters.contains(role))
+                    characters.add(role);
+
+        }
+
+        return characters;
+    }
+
 }

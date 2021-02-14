@@ -4,7 +4,6 @@ import com.experis.movie_character_api.models.Character;
 import com.experis.movie_character_api.models.Movie;
 import com.experis.movie_character_api.services.FranchiseService;
 import com.experis.movie_character_api.models.Franchise;
-import com.experis.movie_character_api.repositories.FranchiseRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -98,5 +97,18 @@ public class FranchiseController {
         status = HttpStatus.OK;
         return new ResponseEntity<>(moviesInFranchise, status);
     }
-}
 
+    @GetMapping("/{id}/characters")
+    public ResponseEntity<List<Character>> getCharactersByFranchiseId(@PathVariable Long id) {
+        HttpStatus status;
+        List<Character> characters = franchiseService.getCharactersByFranchiseId(id);
+
+        if (characters == null) {
+            status = HttpStatus.NOT_FOUND;
+            return new ResponseEntity<>(null, status);
+        }
+
+        status = HttpStatus.OK;
+        return new ResponseEntity<>(characters, status);
+    }
+}
