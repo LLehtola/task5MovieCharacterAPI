@@ -1,6 +1,5 @@
 package com.experis.movie_character_api.services;
 
-import com.experis.movie_character_api.services.MovieService;
 import com.experis.movie_character_api.models.Character;
 import com.experis.movie_character_api.models.Franchise;
 import com.experis.movie_character_api.models.Movie;
@@ -11,9 +10,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import javax.transaction.Transactional;
-import java.util.ArrayList;
 import java.util.List;
-import java.util.Optional;
 
 @Service
 public class FranchiseService {

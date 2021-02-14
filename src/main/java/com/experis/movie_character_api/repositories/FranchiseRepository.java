@@ -1,6 +1,5 @@
 package com.experis.movie_character_api.repositories;
 
-import com.experis.movie_character_api.models.Character;
 import com.experis.movie_character_api.models.Franchise;
 import org.springframework.data.jpa.repository.EntityGraph;
 import org.springframework.data.jpa.repository.JpaRepository;

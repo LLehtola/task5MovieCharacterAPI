@@ -1,9 +1,9 @@
 package com.experis.movie_character_api.controllers;
 
 import com.experis.movie_character_api.models.Character;
+import com.experis.movie_character_api.models.Franchise;
 import com.experis.movie_character_api.models.Movie;
 import com.experis.movie_character_api.services.FranchiseService;
-import com.experis.movie_character_api.models.Franchise;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
