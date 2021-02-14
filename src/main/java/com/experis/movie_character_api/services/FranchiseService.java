@@ -81,18 +81,7 @@ public class FranchiseService {
         if (!franchiseRepository.existsById(id))
             return null;
 
-        Franchise franchise = franchiseRepository.findById(id).get();
-        List<Movie> movies = franchise.getMovies();
-        List<Character> characters = new ArrayList<>();
-
-        for (Movie movie : movies) {
-            List<Character> CharactersInMovie = movie.getCharacters();
-
-            for (Character role : CharactersInMovie)
-                if (!characters.contains(role))
-                    characters.add(role);
-
-        }
+        List<Character> characters = characterRepository.getCharactersByFranchiseId(id);
 
         return characters;
     }
