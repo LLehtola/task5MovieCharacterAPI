@@ -16,7 +16,7 @@ public interface CharacterRepository extends JpaRepository<Character, Long> {
     List<Character> findByIdNotNull();
 
     @Query(
-            value = "SELECT c.id, c.alias, c.full_name, c.gender, c.picture_url " +
+            value = "SELECT DISTINCT c.id, c.alias, c.full_name, c.gender, c.picture_url " +
                     "FROM character c " +
                     "LEFT JOIN movie_character mc ON c.id = mc.character_id " +
                     "LEFT JOIN movie m ON mc.movie_id = m.id " +
